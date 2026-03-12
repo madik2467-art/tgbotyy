@@ -7,7 +7,7 @@ import httpx
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile
-from aiogram.client.default import DefaultBotProperties
+from aiogram.client.default import DefaultBotProperties  # УДАЛИТЬ
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -19,7 +19,7 @@ from database import init_db, get_db
 # Инициализация бота
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
-bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
 SCRIPT_DIR = pathlib.Path(__file__).parent.resolve()
 
 # ===================== AI =====================
@@ -653,4 +653,5 @@ async def start_bot():
     await dp.start_polling(bot)
     # В конец bot.py добавь:
 if __name__ == "__main__":
+
     asyncio.run(start_bot())
