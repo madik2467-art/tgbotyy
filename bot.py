@@ -7,7 +7,6 @@ import httpx
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, FSInputFile
-from aiogram.client.default import DefaultBotProperties  # УДАЛИТЬ
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -655,3 +654,4 @@ async def start_bot():
 if __name__ == "__main__":
 
     asyncio.run(start_bot())
+
