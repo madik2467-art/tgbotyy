@@ -577,15 +577,27 @@ async def booking_confirm(m: types.Message, state: FSMContext):
             
             await conn.execute('UPDATE inventory SET available_quantity = available_quantity - $1 WHERE id=$2',
                             qty, data["item_id"])
+            
+            # ИСПРАВЛЕНО: убраны скобки вокруг аргументов, передаём через запятую
             await conn.execute('''
                 INSERT INTO bookings 
                 (user_id, item_id, quantity, rent_type, booking_date, booking_time, 
                  duration, return_datetime, total_price, booked_at, reminder_sent, returned) 
-                VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-            ''', (m.from_user.id, data["item_id"], qty, data['rent_type'],
-                  data['date'], data.get('time', '00:00'), data['duration'],
-                  data['return_datetime'], total_price,
-                  datetime.now().strftime("%d.%m.%Y %H:%M"), 0, 0))
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            ''', 
+            m.from_user.id,           # $1
+            data["item_id"],          # $2
+            qty,                      # $3
+            data['rent_type'],        # $4
+            data['date'],             # $5
+            data.get('time', '00:00'), # $6
+            data['duration'],         # $7
+            data['return_datetime'],  # $8
+            total_price,              # $9
+            datetime.now().strftime("%d.%m.%Y %H:%M"), # $10
+            0,                        # $11
+            0                         # $12
+            )
 
     await log_to_sheet(m.from_user.full_name, m.from_user.username, m.from_user.id,
                       f"{data['item_name']} ×{qty}", "book", data['date'], 
@@ -654,4 +666,5 @@ async def start_bot():
 if __name__ == "__main__":
 
     asyncio.run(start_bot())
+
 
