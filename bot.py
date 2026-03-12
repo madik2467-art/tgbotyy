@@ -369,9 +369,10 @@ async def item_selected(m: types.Message, state: FSMContext):
     )
     await state.set_state(States.item_view)
 
-    photo_path = SCRIPT_DIR / "items" / f"{selected['id']}.jpg"
-    photo = FSInputFile(photo_path) if photo_path.exists() else None
-
+    # Фото из URL или локальный файл
+    from config import ITEM_IMAGES
+    photo_url = ITEM_IMAGES.get(selected["id"])
+    
     kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Забронировать")],
         [KeyboardButton(text="Назад")]
@@ -386,7 +387,10 @@ async def item_selected(m: types.Message, state: FSMContext):
         f"• Посуточная: <b>{selected['price_per_day']:.0f}₸/день</b>"
     )
     
-    await clean_and_send(m.chat.id, text, reply_markup=kb, state=state, delete_msg=m, photo=photo)
+    if photo_url:
+        await bot.send_photo(m.chat.id, photo=photo_url, caption=text, reply_markup=kb)
+    else:
+        await clean_and_send(m.chat.id, text, reply_markup=kb, state=state, delete_msg=m)
 
 @dp.message(F.text == "Забронировать")
 async def booking_start(m: types.Message, state: FSMContext):
@@ -664,6 +668,7 @@ async def start_bot():
 if __name__ == "__main__":
 
     asyncio.run(start_bot())
+
 
 
 
