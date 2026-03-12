@@ -1,7 +1,7 @@
 # config.py
 import os
 
-BOT_TOKEN = "8589435764:AAFSz3huT7ZmpdDj5NcBLrvrthitFOrNBMc"
+BOT_TOKEN = "7971840018:AAHbCaoN_39e4i6BCbKynDUgP5y64eZMNdw"
 GROQ_API_KEY = "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"
 ADMIN_ID = 6106034597
 SHEET_BEST_URL = "https://api.sheetbest.com/sheets/db56727e-6601-4c53-9163-bfcf7fa4794f"
@@ -12,3 +12,4 @@ DATABASE_URL = "postgresql://neondb_owner:npg_EFdcgysS3j7r@ep-weathered-band-adw
 
 
 WEBAPP_URL = "https://tgbot-663622rf9-madik2467-arts-projects.vercel.app/"
+
