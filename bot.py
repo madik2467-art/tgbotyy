@@ -43,18 +43,16 @@ async def ask_groq(message: str) -> str:
         return "Ошибка соединения."
 
 # ===================== КЛАВИАТУРЫ =====================
-def main_menu():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="Каталог")],
-            [KeyboardButton(text="Мои брони"), KeyboardButton(text="Чат с консультантом")],
-            [KeyboardButton(
-                text="📊 Открыть панель управления",
-                web_app=WebAppInfo(url=WEBAPP_URL)
-            )]
-        ],
-        resize_keyboard=True
-    )
+def main_menu(user_id: int = None):
+    keyboard = [
+        [KeyboardButton(text="Каталог")],
+        [KeyboardButton(text="Мои брони"), KeyboardButton(text="Чат с консультантом")],
+        [KeyboardButton(
+            text="📊 Открыть панель управления",
+            web_app=WebAppInfo(url=f"{WEBAPP_URL}?user_id={user_id}")
+        )]
+    ]
+    return ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
 
 def back_kb():
     return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Назад")]], resize_keyboard=True)
@@ -200,7 +198,7 @@ async def reminder_worker():
 async def start(m: types.Message, state: FSMContext):
     await state.clear()
     await clean_and_send(m.chat.id, "👋 Добро пожаловать!\n\nЧем могу помочь?", 
-                        reply_markup=main_menu(), state=state, delete_msg=m)
+                        reply_markup=main_menu(user_id=m.from_user.id), state=state, delete_msg=m)
 
 @dp.message(F.text == "Каталог")
 async def show_catalog(m: types.Message, state: FSMContext):
@@ -666,5 +664,6 @@ async def start_bot():
 if __name__ == "__main__":
 
     asyncio.run(start_bot())
+
 
 
