@@ -138,4 +138,48 @@ def init_db_sync():
             items
         )
         conn.commit()
+
     conn.close()
+    # Добавьте в конец database.py
+
+async def get_user_bookings(user_id: int):
+    """Получить брони конкретного пользователя"""
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        rows = await conn.fetch('''
+            SELECT b.id, b.quantity, i.name, b.booking_date, b.booking_time,
+                   b.rent_type, b.duration, b.total_price, b.return_datetime, b.returned
+            FROM bookings b 
+            JOIN inventory i ON b.item_id = i.id
+            WHERE b.user_id = $1 
+            ORDER BY b.booked_at DESC
+        ''', user_id)
+        return [dict(row) for row in rows]
+
+async def return_booking_safe(booking_id: int, user_id: int):
+    """Вернуть бронь только если она принадлежит пользователю"""
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        async with conn.transaction():
+            # Проверяем, что бронь принадлежит этому пользователю
+            booking = await conn.fetchrow(
+                'SELECT item_id, quantity, returned FROM bookings WHERE id = $1 AND user_id = $2',
+                booking_id, user_id
+            )
+            if not booking:
+                return None  # Бронь не найдена или не принадлежит пользователю
+            
+            if booking['returned']:
+                return False  # Уже возвращена
+            
+            # Обновляем инвентарь
+            await conn.execute(
+                'UPDATE inventory SET available_quantity = available_quantity + $1 WHERE id = $2',
+                booking['quantity'], booking['item_id']
+            )
+            # Помечаем как возвращенную
+            await conn.execute(
+                'UPDATE bookings SET returned = 1 WHERE id = $1',
+                booking_id
+            )
+            return True
