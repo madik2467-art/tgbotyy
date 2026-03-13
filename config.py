@@ -10,7 +10,7 @@ SHEET_BEST_KEY = "KyzgKBDQzYBxbXBWFb2Wg6wW9ZjbwW1jXi9bKvSFrG_ddW9k%Z#B7EP9xcne6J
 # Neon Database с портом 5433 (SSL)# config.py
 DATABASE_URL = "postgresql://neondb_owner:npg_EFdcgysS3j7r@ep-weathered-band-adwsari7-pooler.c-2.us-east-1.aws.neon.tech:5433/neondb?sslmode=require"
 
-WEBAPP_URL = "https://tgbot-kappa-six.vercel.app/"
+WEBAPP_URL = "https://tgbot-72tb.vercel.app/"
 
 # Фото для товаров (URL или путь)
 ITEM_IMAGES = {
@@ -23,5 +23,6 @@ ITEM_IMAGES = {
     7: "https://images.unsplash.com/photo-1566796195789-d5a59f97235b?w=400",  # Ролики
     8: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=400",  # Гантели
 }
+
 
 
